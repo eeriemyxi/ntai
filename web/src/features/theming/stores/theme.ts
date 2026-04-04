@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import { Theme } from "../";
+
 interface ThemeState {
   activeTheme: Theme;
   setActiveTheme: (theme: Theme) => void;

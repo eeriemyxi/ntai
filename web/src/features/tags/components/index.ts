@@ -1,3 +1,2 @@
-export * from "./EditPresetDialog";
-export * from "./TagList";
+export * from "./EditPresetModal";
 export * from "./TagInput";

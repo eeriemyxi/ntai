@@ -1,64 +1,98 @@
+import {
+  ActionIcon,
+  Badge,
+  Divider,
+  Group,
+  Paper,
+  Pill,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import { SimpleTooltip } from "@/components/SimpleTooltip";
-import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-
 import { usePresetStore } from "../stores/preset";
-import { EditPresetDialog, TagList } from "./";
+import { EditPresetModal } from "./";
 
 export function TagInput({ presetIndex }: { presetIndex?: number }) {
   const activePreset = usePresetStore((state) => {
     const index = presetIndex ?? state.activePreset;
     return state.presets[index];
   });
-  const [
-    addTag,
-    popTag,
-    setActivePreset,
-    activePresetIndex,
-    presets,
-    addPreset,
-  ] = usePresetStore(
-    useShallow((state) => [
-      state.addTag,
-      state.popTag,
-      state.setActivePreset,
-      state.activePreset,
-      state.presets,
-      state.addPreset,
-    ]),
+  const presetStore = usePresetStore(
+    useShallow((state) => ({
+      addTag: state.addTag,
+      removeTag: state.removeTag,
+      popTag: state.popTag,
+      setActivePreset: state.setActivePreset,
+      activePresetIndex: state.activePreset,
+      presets: state.presets,
+      addPreset: state.addPreset,
+      removePreset: state.removePreset,
+      setPresetName: state.setPresetName,
+    })),
   );
 
   return (
-    <div className="border-border border-1 flex flex-col w-150 p-5 gap-5">
-      <p className="uppercase text-foreground/85 font-bold text-xs text-center select-none">
-        Preset Menu
-      </p>
-      <div className="flex justify-between items-center relative">
-        <h1 className="text-accent-foreground font-medium">
-          {activePreset.name}
-        </h1>
-        <EditPresetDialog />
-      </div>
-      <Separator />
-      <TagList tags={activePreset.tagList} />
-      <div className="flex gap-2">
-        <SimpleTooltip tooltip="Previous preset">
-          <Button
-            onClick={() => {
-              setActivePreset(activePresetIndex - 1);
-            }}
+    <Paper p="md" mx="auto" w={{ base: "80%", sm: "60%" }} withBorder>
+      <Stack align="stretch" justify="start" gap="lg">
+        <Group align="center" justify="center" my="auto" gap="xs">
+          <Badge variant="transparent" color="dark" size="lg">
+            Preset Menu
+          </Badge>
+        </Group>
+
+        <Group align="center" justify="space-between">
+          <Text fw="bold" lh={1}>
+            {activePreset.name}
+          </Text>
+          <EditPresetModal />
+        </Group>
+
+        <Divider
+          my="xs"
+          label={
+            <Badge size="lg" variant="default">
+              {presetStore.activePresetIndex + 1} / {presetStore.presets.length}
+            </Badge>
+          }
+          labelPosition="center"
+        />
+
+        {activePreset.tagList.length > 0 ? (
+          <Pill.Group h={21}>
+            {activePreset.tagList.map((tag) => (
+              <Pill
+                key={tag}
+                withRemoveButton
+                onRemove={() => presetStore.removeTag(tag)}
+              >
+                {tag}
+              </Pill>
+            ))}
+          </Pill.Group>
+        ) : (
+          <Text c="dimmed" size="sm">
+            No tags yet.
+          </Text>
+        )}
+
+        <Group wrap="nowrap" gap="sm">
+          <ActionIcon
+            variant="default"
+            size="lg"
+            radius="md"
+            onClick={() =>
+              presetStore.setActivePreset(presetStore.activePresetIndex - 1)
+            }
           >
-            <ChevronLeft />{" "}
-          </Button>
-        </SimpleTooltip>
-        <Field>
-          <Input
+            <ChevronLeft size={18} />
+          </ActionIcon>
+
+          <TextInput
             placeholder="Type the tag then hit enter/tab to add"
+            style={{ flex: 1 }}
             onKeyDown={(event) => {
               switch (event.key) {
                 case "Enter":
@@ -68,40 +102,41 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
                     event.currentTarget.ariaInvalid = "";
                     break;
                   }
-                  addTag(event.currentTarget.value.trim());
+                  presetStore.addTag(event.currentTarget.value.trim());
                   event.currentTarget.value = "";
                   break;
                 case "Backspace":
                   if (event.currentTarget.value != "") break;
-                  popTag();
+                  presetStore.popTag();
                   break;
               }
             }}
           />
-        </Field>
-        <SimpleTooltip tooltip="Next preset">
-          <Button
+
+          <ActionIcon
+            variant="default"
+            size="lg"
+            radius="md"
+            onClick={() =>
+              presetStore.setActivePreset(presetStore.activePresetIndex + 1)
+            }
+          >
+            <ChevronRight size={18} />
+          </ActionIcon>
+
+          <ActionIcon
+            variant="filled"
+            size="lg"
+            radius="xl"
             onClick={() => {
-              setActivePreset(activePresetIndex + 1);
+              presetStore.addPreset();
+              presetStore.setActivePreset(presetStore.presets.length); // This is before a rerender, so we don't subtract 1.
             }}
           >
-            <ChevronRight />{" "}
-          </Button>
-        </SimpleTooltip>
-        <SimpleTooltip tooltip="Creaet a preset">
-          <Button
-            className="rounded-full"
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              addPreset();
-              setActivePreset(presets.length); // This is before a rerender, so we don't subtract 1.
-            }}
-          >
-            <Plus className="w-100 h-100" />{" "}
-          </Button>
-        </SimpleTooltip>
-      </div>
-    </div>
+            <Plus size={18} />
+          </ActionIcon>
+        </Group>
+      </Stack>
+    </Paper>
   );
 }

@@ -33,6 +33,10 @@ export function thumbnailUrl(item: GalleryItem) {
   return url.toString();
 }
 
+export function bookUrl(item: GalleryItem) {
+  return new URL(`/g/${item.id}`, NHENTAI_ORIGIN).toString();
+}
+
 export async function searchNhentai(
   query: string | string[],
   sort?: SortType,
