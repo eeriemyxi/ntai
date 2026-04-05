@@ -7,10 +7,11 @@ import { useShallow } from "zustand/react/shallow";
 import { useLogsStore } from "@/features/logs/stores/logs";
 import { TagMenu } from "@/features/tags/";
 import { usePresetStore } from "@/features/tags/stores/preset";
-import { bookUrl, randomNhentai } from "@/fetching";
+import { bookUrl, ErrorType, randomNhentai } from "@/fetching";
 
 import { Notifications } from "@mantine/notifications";
 import { Search } from "lucide-react";
+import { notify } from "./components/Notifications";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
@@ -45,13 +46,27 @@ function App() {
                     w={{ base: "30%", sm: "20%" }}
                     mx="auto"
                     onClick={async () => {
-                      const result = await randomNhentai(activePreset.tagList);
-                      if (!result) {
-                        console.error("Couldn't find any. TODO");
+                      const [result, err] = await randomNhentai(
+                        activePreset.tagList,
+                        undefined,
+                        activePreset.blacklistEnabled
+                          ? logStore.items[activePresetIndex]
+                          : undefined,
+                      );
+                      console.log(result, err);
+
+                      if (err === ErrorType.NO_PAGES) {
+                        const msg = `No pages found.` + (activePreset.blacklistEnabled
+                          ? " Note: you have blacklist feature enabled."
+                          : "");
+                        notify({ message: msg, color: "red" });
                         return;
                       }
-                      logStore.logItem(activePresetIndex, result);
-                      window.open(bookUrl(result), "_blank");
+
+                      if (result) {
+                        logStore.logItem(activePresetIndex, result);
+                        window.open(bookUrl(result), "_blank");
+                      }
                     }}>
                     Search
                   </Button>

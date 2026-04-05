@@ -27,6 +27,12 @@ export interface GalleryResponse {
   total: number;
 }
 
+export enum ErrorType {
+  OK = 1,
+  NO_PAGES = 2,
+  NO_RESPONSE = 3,
+}
+
 export function thumbnailUrl(item: GalleryItem) {
   const url = new URL(item.thumbnail, NHENTAI_ORIGIN);
   url.host = "t1." + url.host;
@@ -64,21 +70,27 @@ export async function searchNhentai(
 export async function randomNhentai(
   query: string | string[],
   sort?: SortType,
-): Promise<GalleryItem | null> {
+  blacklist?: GalleryItem[] | number[],
+): Promise<[GalleryItem | null, ErrorType | null]> {
   if (query instanceof Array) query = query.join(" ");
+  if (blacklist && blacklist[0] instanceof Object) {
+    blacklist = (blacklist as GalleryItem[]).map(item => item.id);
+  }
 
   const url = new URL("/api/nhentai/random", window.location.origin);
   const params: Record<string, string> = { query: query };
 
   if (sort) params["sort"] = sort;
+  if (blacklist) params["blacklist"] = blacklist.join(",");
 
   url.search = new URLSearchParams(params).toString();
 
   const resp = await fetch(url);
 
   if (resp.status != 200) {
-    return null;
+    const json = await resp.json();
+    return [null, json.detail.code];
   }
 
-  return await resp.json();
+  return [await resp.json(), null];
 }

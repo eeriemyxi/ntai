@@ -1,32 +1,34 @@
 import typing as t
 
 from curl_cffi import Session
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from pydantic import BeforeValidator
 
 from . import core, types
 
 app = FastAPI(root_path="/api")
 session = Session()
 
-
-def parse_comma_separated_ints(value: str | None) -> list[int]:
-    if not value:
+def parse_blacklist(
+    blacklist: str | None = Query(
+        None, description="A comma-separated list of integer book ids to be blacklisted"
+    )
+) -> list[int]:
+    if not blacklist:
         return []
-    return [int(item.strip()) for item in value.split(",")]
-
-
-CommaIntList = t.Annotated[list[int], BeforeValidator(parse_comma_separated_ints)]
-
+    
+    try:
+        return [int(item.strip()) for item in blacklist.split(",") if item.strip()]
+    except ValueError:
+        raise HTTPException(status_code=422, detail="Blacklist items must be valid integers.")
 
 @app.get("/nhentai/search")
 def nhentai_search(
     query: str, sort: types.SortType = types.SortType.DATE, page: int = 1
-) -> JSONResponse:
+):
     result = core.nhentai_search(session, query, sort, page)
     if not result:
-        return JSONResponse(dict(status_code=500))
+        raise HTTPException(500)
     return JSONResponse(result.model_dump())
 
 
@@ -34,11 +36,9 @@ def nhentai_search(
 def nhentai_random(
     query: str,
     sort: types.SortType = types.SortType.DATE,
-    blacklist: CommaIntList = Query(
-        None, description="A comma-separated list of integer book ids to be blacklisted"
-    ),
-) -> JSONResponse:
-    result = core.find_random_book(session, query, sort, blacklist)
+    blacklist: list[int] = Depends(parse_blacklist),
+):
+    result, err = core.find_random_book(session, query, sort, blacklist)
     if not result:
-        return JSONResponse(dict(status_code=500))
+        raise HTTPException(500, detail={"code": err})
     return JSONResponse(result.model_dump())

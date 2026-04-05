@@ -5,6 +5,7 @@ import platformdirs
 from cache_decorator import Cache
 from curl_cffi import Session
 from yarl import URL
+from loguru import logger as log
 
 from . import types
 
@@ -39,21 +40,38 @@ def find_random_book(
     query: str,
     sort: types.SortType = types.SortType.DATE,
     blacklist: list[int] | None = None,
-) -> types.GalleryItem | None:
+) -> tuple[types.GalleryItem | None, types.ErrorType | None]:
     resp: types.GalleryResponse | None = nhentai_search(session, query, sort, 1)
-    if not resp or resp.num_pages == 0:
-        return None
+    if not resp:
+        log.info(f"Returning None because {resp=}")
+        return None, types.ErrorType.NO_RESPONSE
+    if resp.num_pages == 0:
+        log.info(f"Returning None because {resp.num_pages=}")
+        return None, types.ErrorType.NO_RESPONSE
 
     blacklist_set = set(blacklist or [])
+    log.info(f"Blacklist set: {blacklist_set}")
+    log.info(f"{min(3, resp.num_pages)=}")
 
-    for _ in range(min(3, resp.num_pages)):
+    for i in range(min(3, resp.num_pages)):
+        log.info(f"Iteration #{i}")
+
         page = secrets.randbelow(resp.num_pages) + 1
+        log.info(f"Selected page {page} from {resp.num_pages} pages")
+
         nresp = nhentai_search(session, query, sort, page)
         if not nresp:
-            return None
+            log.info(f"Returning None because {nresp=}")
+            return None, types.ErrorType.NO_RESPONSE
 
         valid_books = [book for book in nresp.result if book.id not in blacklist_set]
-        if valid_books:
-            return secrets.choice(valid_books)
+        log.info(f"All books: {[b.id for b in nresp.result]}")
+        log.info(f"Valid books: {[b.id for b in valid_books]}, total {len(valid_books)} out of {len(nresp.result)}")
 
-    return None
+        if valid_books:
+            choice = secrets.choice(valid_books)
+            log.success(f"{choice.id=} was randomly selected from valid books")
+            return choice, None
+    
+    log.info("Return None because no pages are left to check")
+    return None, types.ErrorType.NO_PAGES

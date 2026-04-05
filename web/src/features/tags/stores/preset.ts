@@ -6,12 +6,13 @@ import { immer } from "zustand/middleware/immer";
 
 import { notify } from "@/components/Notifications";
 
-const DEFAULT_PRESET = { name: "Default Preset", tagList: [] };
+const DEFAULT_PRESET = { name: "Default Preset", tagList: [], blacklistEnabled: false };
 
 interface PresetState {
   activePreset: number;
   setActivePreset: (presetIndex: number) => void;
-  presets: { name: string; tagList: string[]; }[];
+  setBlacklistStatus: (presetIndex: number, status: boolean) => void;
+  presets: { name: string; tagList: string[]; blacklistEnabled: boolean; }[];
   addPreset: (name?: string, tagList?: string[]) => void;
   removePreset: (presetIndex?: number) => void;
   setPresetName: (name: string, presetIndex?: number) => void;
@@ -41,13 +42,22 @@ export const usePresetStore = create<PresetState>()(
             state.activePreset = presetIndex;
           });
         },
+        setBlacklistStatus: (presetIndex: number, status: boolean) => {
+          set(state => {
+            state.presets[presetIndex].blacklistEnabled = status;
+          });
+        },
         presets: [DEFAULT_PRESET],
-        addPreset: (name?: string, tagList?: string[]) => {
+        addPreset: (name?: string, tagList?: string[], blacklistEnabled: boolean = false) => {
           set((state) => {
             if (!name || !tagList) {
               state.presets.push(DEFAULT_PRESET);
             } else {
-              state.presets.push({ name: name, tagList: tagList });
+              state.presets.push({
+                name: name,
+                tagList: tagList,
+                blacklistEnabled: blacklistEnabled,
+              });
             }
             notify({ message: "Added a new preset" });
           });
@@ -122,6 +132,16 @@ export const usePresetStore = create<PresetState>()(
         },
       })),
     ),
-    { name: "preset" },
+    {
+      name: "preset",
+      version: 1,
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          for (const key of Object.keys(persistedState.presets)) {
+            persistedState.presets[key].blacklistEnabled = false;
+          }
+        }
+      },
+    },
   ),
 );
