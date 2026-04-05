@@ -12,7 +12,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
 
 import { useLogsStore } from "@/features/logs/stores/logs";
-import { TagInput } from "@/features/tags/components/TagInput";
+import { TagMenu } from "@/features/tags/";
 import { usePresetStore } from "@/features/tags/stores/preset";
 import { bookUrl, randomNhentai } from "@/fetching";
 
@@ -42,7 +42,7 @@ function App() {
             </Group>
             <Center h="100vh">
               <Stack w="100%">
-                <TagInput />
+                <TagMenu />
                 <Tooltip label="Search for a random book based on this preset">
                   <Button
                     variant="default"

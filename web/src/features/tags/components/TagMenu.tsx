@@ -16,7 +16,7 @@ import { useShallow } from "zustand/react/shallow";
 import { usePresetStore } from "../stores/preset";
 import { EditPresetModal } from "./";
 
-export function TagInput({ presetIndex }: { presetIndex?: number; }) {
+export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
   const activePreset = usePresetStore((state) => {
     const index = presetIndex ?? state.activePreset;
     return state.presets[index];
