@@ -5,6 +5,7 @@ import {
   Group,
   MantineProvider,
   Stack,
+  Tooltip
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { ModalsProvider } from "@mantine/modals";
@@ -18,6 +19,7 @@ import { bookUrl, randomNhentai } from "@/fetching";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
+import { Search } from "lucide-react";
 
 function App() {
   const theme = useThemeStore((state) => state.activeTheme);
@@ -41,8 +43,10 @@ function App() {
             <Center h="100vh">
               <Stack w="100%">
                 <TagInput />
+                <Tooltip label="Search for a random book based on this preset">
                 <Button
                   variant="default"
+                  leftSection={<Search size={16}/>}
                   w={{ base: "30%", sm: "20%" }}
                   mx="auto"
                   onClick={async () => {
@@ -53,10 +57,10 @@ function App() {
                     }
                     logStore.logItem(result);
                     window.open(bookUrl(result), "_blank");
-                  }}
-                >
+                  }}>
                   Search
                 </Button>
+                </Tooltip>
               </Stack>
             </Center>
           </AppShell.Main>
