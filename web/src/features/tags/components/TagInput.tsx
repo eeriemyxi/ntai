@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
@@ -61,13 +62,12 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
         />
 
         {activePreset.tagList.length > 0 ? (
-          <Pill.Group h={21}>
+          <Pill.Group>
             {activePreset.tagList.map((tag) => (
               <Pill
                 key={tag}
                 withRemoveButton
-                onRemove={() => presetStore.removeTag(tag)}
-              >
+                onRemove={() => presetStore.removeTag(tag)}>
                 {tag}
               </Pill>
             ))}
@@ -85,8 +85,7 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
             radius="md"
             onClick={() =>
               presetStore.setActivePreset(presetStore.activePresetIndex - 1)
-            }
-          >
+            }>
             <ChevronLeft size={18} />
           </ActionIcon>
 
@@ -113,17 +112,19 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
             }}
           />
 
+          <Tooltip label="Next preset">
           <ActionIcon
             variant="default"
             size="lg"
             radius="md"
             onClick={() =>
               presetStore.setActivePreset(presetStore.activePresetIndex + 1)
-            }
-          >
+            }>
             <ChevronRight size={18} />
           </ActionIcon>
+          </Tooltip>
 
+          <Tooltip label="Create a new preset (not tag!)">
           <ActionIcon
             variant="filled"
             size="lg"
@@ -131,10 +132,10 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
             onClick={() => {
               presetStore.addPreset();
               presetStore.setActivePreset(presetStore.presets.length); // This is before a rerender, so we don't subtract 1.
-            }}
-          >
+            }}>
             <Plus size={18} />
           </ActionIcon>
+          </Tooltip>
         </Group>
       </Stack>
     </Paper>
