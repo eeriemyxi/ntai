@@ -18,12 +18,14 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
     const index = presetIndex ?? state.activePreset;
     return state.presets[index];
   });
+
   const presetStore = usePresetStore(
     useShallow((state) => ({
       removePreset: state.removePreset,
       setPresetName: state.setPresetName,
     })),
   );
+
   return (
     <ActionIcon
       size={30}
@@ -49,8 +51,8 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
                   }
                   presetStore.setPresetName(name.toString());
                   modals.closeAll();
-                }}
-              >
+                }}>
+
                 <TextInput
                   label="Name"
                   name="name"
@@ -58,22 +60,45 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
                   mb="xl"
                   data-autofocus
                 />
-                <Box bg="var(--mantine-color-gray-1)" mx="-md" mb="-md" p="md">
+
+                <Box
+                  bg="light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6))"
+                  mx="-md"
+                  mb="-md"
+                  p="md">
                   <Group justify="flex-end">
+
                     <Button variant="default" onClick={modals.closeAll}>
                       Cancel
                     </Button>
+
                     <Button
-                      variant="light"
+                      variant="outline"
                       color="red"
                       onClick={() => {
-                        modals.closeAll();
-                        presetStore.removePreset();
-                      }}
-                    >
+                        modals.openConfirmModal({
+                          modalId: "remove-preset-confirm",
+                          centered: true,
+                          title: "Do you really want to remove this preset?",
+                          children: (
+                            <Text size="sm">
+                              This action is irrevisible. Your data on this
+                              preset will be lost.
+                            </Text>
+                          ),
+                          labels: { confirm: "Remove", cancel: "Cancel" },
+                          confirmProps: { color: "red", variant: "outline" },
+                          onCancel: () => modals.close("remove-preset-confirm"),
+                          onConfirm: () => {
+                            modals.closeAll();
+                            presetStore.removePreset();
+                          },
+                        });
+                      }}>
                       Remove preset
                     </Button>
-                    <Button color="dark" type="submit">
+
+                    <Button variant="default" type="submit">
                       Save changes
                     </Button>
                   </Group>
@@ -82,8 +107,7 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
             </Stack>
           ),
         })
-      }
-    >
+      }>
       <Pencil size={15} />
     </ActionIcon>
   );
