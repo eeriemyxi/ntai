@@ -1,38 +1,45 @@
 .dimOnHover {
-    transition: opacity 0.2s ease; /* Smooth fade effect */
+  transition: opacity 0.2s ease; /* Smooth fade effect */
 }
 
 .dimOnHover:hover {
-    opacity: 0.7; /* Adjust this number to control the dimness */
-    cursor: pointer; /* Optional: makes it feel clickable */
+  opacity: 0.7; /* Adjust this number to control the dimness */
+  cursor: pointer; /* Optional: makes it feel clickable */
 }
 
 .liftOnHover {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .liftOnHover:hover {
-    transform: translateY(-2px); /* Lifts the button up 2 pixels */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Adds a soft shadow beneath */
+  transform: translateY(-2px); /* Lifts the button up 2 pixels */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Adds a soft shadow beneath */
 }
 
 .liftOnHover:active {
-    transform: translateY(0); /* "Presses" it back down when clicked */
-    box-shadow: none; /* Removes shadow on press */
+  transform: translateY(0); /* "Presses" it back down when clicked */
+  box-shadow: none; /* Removes shadow on press */
 }
 
 .nativeMantineFeel {
-    /* Mantine's default transition speed is lightning fast (100ms) */
-    transition: background-color 100ms ease, transform 100ms ease;
+  /* Mantine's default transition speed is lightning fast (100ms) */
+  transition:
+    background-color 100ms ease,
+    transform 100ms ease;
 }
 
 .nativeMantineFeel:hover {
-    /* This exactly mimics the background shift of Mantine's variant="default" */
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-5));
-    cursor: pointer;
+  /* This exactly mimics the background shift of Mantine's variant="default" */
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-5)
+  );
+  cursor: pointer;
 }
 
 .nativeMantineFeel:active {
-    /* This is the secret sauce: Mantine buttons push down exactly 1px when clicked */
-    transform: translateY(1px);
+  /* This is the secret sauce: Mantine buttons push down exactly 1px when clicked */
+  transform: translateY(1px);
 }
