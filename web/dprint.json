@@ -4,8 +4,7 @@
     "semiColons": "always",
     "jsx.quoteStyle": "preferDouble",
     "trailingCommas": "onlyMultiLine",
-    "jsx.multiLineBracketPosition": "sameLine",
-    "jsx.spaceBeforeSlash": true,
+    "jsx.bracketPosition": "sameLine",
     "module.sortImportDeclarations": "caseSensitive",
     "module.sortExportDeclarations": "caseSensitive"
   },
