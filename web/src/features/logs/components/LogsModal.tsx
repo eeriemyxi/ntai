@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { Logs } from "lucide-react";
+import { History } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { bookUrl, thumbnailUrl } from "@/fetching";
@@ -26,6 +26,7 @@ export function LogsModal() {
 
   return (
     <Button
+      leftSection={<History size={16} />}
       variant="default"
       color="dark"
       size="xs"
@@ -46,7 +47,7 @@ export function LogsModal() {
           ),
           children: (
             <>
-              <SimpleGrid cols={{ base: 1, sm: 5 }}>
+              <SimpleGrid cols={{ base: 1, sm: 3, md:4, lg:5 }}>
                 {Object.values(logStore.items).map((model, index) => (
                   <Paper
                     key={index}
@@ -72,9 +73,8 @@ export function LogsModal() {
             </>
           ),
         })}
-      leftSection={<Logs size={16} />}
     >
-      Logs
+      History
     </Button>
   );
 }
