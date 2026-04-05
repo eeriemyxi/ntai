@@ -18,6 +18,9 @@ export const useLogsStore = create<LogsState>()(
         logItem: (presetIndex: number, item: GalleryItem) => {
           set((state) => {
             if (presetIndex in state.items) {
+              for (const pitem of state.items[presetIndex]) {
+                if (pitem.id == item.id) return;
+              }
               state.items[presetIndex].push(item);
             } else {
               state.items[presetIndex] = [item];
