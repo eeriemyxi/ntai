@@ -16,7 +16,7 @@ import { useShallow } from "zustand/react/shallow";
 import { usePresetStore } from "../stores/preset";
 import { EditPresetModal } from "./";
 
-export function TagInput({ presetIndex }: { presetIndex?: number }) {
+export function TagInput({ presetIndex }: { presetIndex?: number; }) {
   const activePreset = usePresetStore((state) => {
     const index = presetIndex ?? state.activePreset;
     return state.presets[index];
@@ -61,22 +61,25 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
           labelPosition="center"
         />
 
-        {activePreset.tagList.length > 0 ? (
-          <Pill.Group>
-            {activePreset.tagList.map((tag) => (
-              <Pill
-                key={tag}
-                withRemoveButton
-                onRemove={() => presetStore.removeTag(tag)}>
-                {tag}
-              </Pill>
-            ))}
-          </Pill.Group>
-        ) : (
-          <Text c="dimmed" size="sm">
-            No tags yet.
-          </Text>
-        )}
+        {activePreset.tagList.length > 0
+          ? (
+            <Pill.Group>
+              {activePreset.tagList.map((tag) => (
+                <Pill
+                  key={tag}
+                  withRemoveButton
+                  onRemove={() => presetStore.removeTag(tag)}
+                >
+                  {tag}
+                </Pill>
+              ))}
+            </Pill.Group>
+          )
+          : (
+            <Text c="dimmed" size="sm">
+              No tags yet.
+            </Text>
+          )}
 
         <Group wrap="nowrap" gap="sm">
           <ActionIcon
@@ -84,8 +87,8 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
             size="lg"
             radius="md"
             onClick={() =>
-              presetStore.setActivePreset(presetStore.activePresetIndex - 1)
-            }>
+              presetStore.setActivePreset(presetStore.activePresetIndex - 1)}
+          >
             <ChevronLeft size={18} />
           </ActionIcon>
 
@@ -113,28 +116,29 @@ export function TagInput({ presetIndex }: { presetIndex?: number }) {
           />
 
           <Tooltip label="Next preset">
-          <ActionIcon
-            variant="default"
-            size="lg"
-            radius="md"
-            onClick={() =>
-              presetStore.setActivePreset(presetStore.activePresetIndex + 1)
-            }>
-            <ChevronRight size={18} />
-          </ActionIcon>
+            <ActionIcon
+              variant="default"
+              size="lg"
+              radius="md"
+              onClick={() =>
+                presetStore.setActivePreset(presetStore.activePresetIndex + 1)}
+            >
+              <ChevronRight size={18} />
+            </ActionIcon>
           </Tooltip>
 
           <Tooltip label="Create a new preset (not tag!)">
-          <ActionIcon
-            variant="filled"
-            size="lg"
-            radius="xl"
-            onClick={() => {
-              presetStore.addPreset();
-              presetStore.setActivePreset(presetStore.presets.length); // This is before a rerender, so we don't subtract 1.
-            }}>
-            <Plus size={18} />
-          </ActionIcon>
+            <ActionIcon
+              variant="filled"
+              size="lg"
+              radius="xl"
+              onClick={() => {
+                presetStore.addPreset();
+                presetStore.setActivePreset(presetStore.presets.length); // This is before a rerender, so we don't subtract 1.
+              }}
+            >
+              <Plus size={18} />
+            </ActionIcon>
           </Tooltip>
         </Group>
       </Stack>

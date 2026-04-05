@@ -5,7 +5,7 @@ import {
   Group,
   MantineProvider,
   Stack,
-  Tooltip
+  Tooltip,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { ModalsProvider } from "@mantine/modals";
@@ -16,10 +16,10 @@ import { TagInput } from "@/features/tags/components/TagInput";
 import { usePresetStore } from "@/features/tags/stores/preset";
 import { bookUrl, randomNhentai } from "@/fetching";
 
+import { Search } from "lucide-react";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
-import { Search } from "lucide-react";
 
 function App() {
   const theme = useThemeStore((state) => state.activeTheme);
@@ -44,22 +44,23 @@ function App() {
               <Stack w="100%">
                 <TagInput />
                 <Tooltip label="Search for a random book based on this preset">
-                <Button
-                  variant="default"
-                  leftSection={<Search size={16}/>}
-                  w={{ base: "30%", sm: "20%" }}
-                  mx="auto"
-                  onClick={async () => {
-                    const result = await randomNhentai(activePreset.tagList);
-                    if (!result) {
-                      console.error("Couldn't find any. TODO");
-                      return;
-                    }
-                    logStore.logItem(result);
-                    window.open(bookUrl(result), "_blank");
-                  }}>
-                  Search
-                </Button>
+                  <Button
+                    variant="default"
+                    leftSection={<Search size={16} />}
+                    w={{ base: "30%", sm: "20%" }}
+                    mx="auto"
+                    onClick={async () => {
+                      const result = await randomNhentai(activePreset.tagList);
+                      if (!result) {
+                        console.error("Couldn't find any. TODO");
+                        return;
+                      }
+                      logStore.logItem(result);
+                      window.open(bookUrl(result), "_blank");
+                    }}
+                  >
+                    Search
+                  </Button>
                 </Tooltip>
               </Stack>
             </Center>

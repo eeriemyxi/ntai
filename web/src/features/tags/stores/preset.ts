@@ -9,7 +9,7 @@ const DEFAULT_PRESET = { name: "Default Preset", tagList: [] };
 interface PresetState {
   activePreset: number;
   setActivePreset: (presetIndex: number) => void;
-  presets: { name: string; tagList: string[] }[];
+  presets: { name: string; tagList: string[]; }[];
   addPreset: (name?: string, tagList?: string[]) => void;
   removePreset: (presetIndex?: number) => void;
   setPresetName: (name: string, presetIndex?: number) => void;
@@ -69,7 +69,9 @@ export const usePresetStore = create<PresetState>()(
         setPresetName: (name: string, presetIndex?: number) => {
           set((state) => {
             const index = presetIndex ?? state.activePreset;
-            const successText = `Updated preset name from "${state.presets[index].name}" to "${name}"`;
+            const successText = `Updated preset name from "${
+              state.presets[index].name
+            }" to "${name}"`;
             state.presets[index].name = name;
             toast.success(successText);
           });

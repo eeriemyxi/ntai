@@ -13,7 +13,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import { usePresetStore } from "../stores/preset";
 
-export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
+export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
   const activePreset = usePresetStore((state) => {
     const index = presetIndex ?? state.activePreset;
     return state.presets[index];
@@ -51,8 +51,8 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
                   }
                   presetStore.setPresetName(name.toString());
                   modals.closeAll();
-                }}>
-
+                }}
+              >
                 <TextInput
                   label="Name"
                   name="name"
@@ -65,9 +65,9 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
                   bg="light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6))"
                   mx="-md"
                   mb="-md"
-                  p="md">
+                  p="md"
+                >
                   <Group justify="flex-end">
-
                     <Button variant="default" onClick={modals.closeAll}>
                       Cancel
                     </Button>
@@ -94,7 +94,8 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
                             presetStore.removePreset();
                           },
                         });
-                      }}>
+                      }}
+                    >
                       Remove preset
                     </Button>
 
@@ -106,8 +107,8 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number }) {
               </form>
             </Stack>
           ),
-        })
-      }>
+        })}
+    >
       <Pencil size={15} />
     </ActionIcon>
   );
