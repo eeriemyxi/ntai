@@ -16,7 +16,7 @@ import { useShallow } from "zustand/react/shallow";
 import { usePresetStore } from "../stores/preset";
 import { EditPresetModal } from "./";
 
-import {TooltipActionIcon} from "@/components/TooltipComponents"
+import { TooltipActionIcon } from "@/components/TooltipComponents";
 
 export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
   const activePreset = usePresetStore((state) => {
@@ -60,8 +60,7 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
               {presetStore.activePresetIndex + 1} / {presetStore.presets.length}
             </Badge>
           }
-          labelPosition="center"
-        />
+          labelPosition="center" />
 
         {activePreset.tagList.length > 0
           ? (
@@ -70,8 +69,7 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
                 <Pill
                   key={tag}
                   withRemoveButton
-                  onRemove={() => presetStore.removeTag(tag)}
-                >
+                  onRemove={() => presetStore.removeTag(tag)}>
                   {tag}
                 </Pill>
               ))}
@@ -89,9 +87,7 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
             variant="default"
             size="lg"
             radius="md"
-            onClick={() =>
-              presetStore.setActivePreset(presetStore.activePresetIndex - 1)}
-          >
+            onClick={() => presetStore.setActivePreset(presetStore.activePresetIndex - 1)}>
             <ChevronLeft size={18} />
           </TooltipActionIcon>
 
@@ -115,31 +111,28 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
                   presetStore.popTag();
                   break;
               }
-            }}
-          />
+            }} />
 
           <TooltipActionIcon
             label="Next preset"
             variant="default"
             size="lg"
             radius="md"
-            onClick={() =>
-                presetStore.setActivePreset(presetStore.activePresetIndex + 1)}
-            >
-              <ChevronRight size={18} />
-        </TooltipActionIcon>
+            onClick={() => presetStore.setActivePreset(presetStore.activePresetIndex + 1)}>
+            <ChevronRight size={18} />
+          </TooltipActionIcon>
 
-          <TooltipActionIcon label="Create a new preset (not tag!)"
-              variant="filled"
-              size="lg"
-              radius="xl"
-              onClick={() => {
-                presetStore.addPreset();
-                presetStore.setActivePreset(presetStore.presets.length); // This is before a rerender, so we don't subtract 1.
-              }}
-            >
-              <Plus size={18} />
-        </TooltipActionIcon>
+          <TooltipActionIcon
+            label="Create a new preset (not tag!)"
+            variant="filled"
+            size="lg"
+            radius="xl"
+            onClick={() => {
+              presetStore.addPreset();
+              presetStore.setActivePreset(presetStore.presets.length); // This is before a rerender, so we don't subtract 1.
+            }}>
+            <Plus size={18} />
+          </TooltipActionIcon>
         </Group>
       </Stack>
     </Paper>

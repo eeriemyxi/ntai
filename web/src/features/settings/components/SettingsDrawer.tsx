@@ -1,12 +1,4 @@
-import {
-  Button,
-  Drawer,
-  Group,
-  Paper,
-  Switch,
-  type SwitchProps,
-  Text,
-} from "@mantine/core";
+import { Button, Drawer, Group, Paper, Switch, type SwitchProps, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Settings } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
@@ -49,8 +41,7 @@ export function SettingsDrawer() {
           checked={theme === Theme.Dark}
           onChange={(event) => {
             setTheme(event.currentTarget.checked ? Theme.Dark : Theme.Light);
-          }}
-        />
+          }} />
       </Drawer>
 
       <Button
@@ -59,8 +50,7 @@ export function SettingsDrawer() {
         size="xs"
         fw="normal"
         onClick={open}
-        leftSection={<Settings size={16} />}
-      >
+        leftSection={<Settings size={16} />}>
         Settings
       </Button>
     </>

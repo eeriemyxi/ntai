@@ -1,14 +1,6 @@
-import {
-  AppShell,
-  Button,
-  Center,
-  Group,
-  MantineProvider,
-  Stack,
-  Tooltip,
-} from "@mantine/core";
+import { AppShell, Button, Center, Group, MantineProvider, Stack, Tooltip } from "@mantine/core";
 import "@mantine/core/styles.css";
-import '@mantine/notifications/styles.css';
+import "@mantine/notifications/styles.css";
 import { ModalsProvider } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
 
@@ -17,25 +9,25 @@ import { TagMenu } from "@/features/tags/";
 import { usePresetStore } from "@/features/tags/stores/preset";
 import { bookUrl, randomNhentai } from "@/fetching";
 
+import { Notifications } from "@mantine/notifications";
 import { Search } from "lucide-react";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
-import { Notifications } from "@mantine/notifications";
 
 function App() {
   const theme = useThemeStore((state) => state.activeTheme);
-  const activePreset = usePresetStore((state) => {
+  const [activePreset, activePresetIndex] = usePresetStore(useShallow((state) => {
     const index = state.activePreset;
-    return state.presets[index];
-  });
+    return [state.presets[index], index];
+  }));
   const logStore = useLogsStore(
     useShallow((state) => ({ items: state.items, logItem: state.logItem })),
   );
 
   return (
     <MantineProvider forceColorScheme={theme}>
-      <Notifications/>
+      <Notifications />
       <ModalsProvider>
         <AppShell>
           <AppShell.Main pos="relative">
@@ -58,10 +50,9 @@ function App() {
                         console.error("Couldn't find any. TODO");
                         return;
                       }
-                      logStore.logItem(result);
+                      logStore.logItem(activePresetIndex, result);
                       window.open(bookUrl(result), "_blank");
-                    }}
-                  >
+                    }}>
                     Search
                   </Button>
                 </Tooltip>

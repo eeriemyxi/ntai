@@ -1,7 +1,7 @@
-import { ActionIcon, Tooltip, type ActionIconProps, Button, type ButtonProps } from '@mantine/core';
-import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
+import { ActionIcon, type ActionIconProps, Button, type ButtonProps, Tooltip } from "@mantine/core";
+import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 
-export type TooltipActionIconProps = ActionIconProps & ComponentPropsWithoutRef<'button'> & {
+export type TooltipActionIconProps = ActionIconProps & ComponentPropsWithoutRef<"button"> & {
   label: ReactNode;
   children: ReactNode;
 };
@@ -16,7 +16,7 @@ export function TooltipActionIcon({ label, children, ...props }: TooltipActionIc
   );
 }
 
-export type TooltipButtonProps = ButtonProps & ComponentPropsWithoutRef<'button'> & {
+export type TooltipButtonProps = ButtonProps & ComponentPropsWithoutRef<"button"> & {
   label: ReactNode;
   children: ReactNode;
 };

@@ -6,8 +6,8 @@ import { immer } from "zustand/middleware/immer";
 import { type GalleryItem } from "@/fetching";
 
 interface LogsState {
-  items: Record<number, GalleryItem>;
-  logItem: (item: GalleryItem) => void;
+  items: Record<number, GalleryItem[]>;
+  logItem: (presetIndex: number, item: GalleryItem) => void;
 }
 
 export const useLogsStore = create<LogsState>()(
@@ -15,9 +15,13 @@ export const useLogsStore = create<LogsState>()(
     immer(
       devtools((set) => ({
         items: {},
-        logItem: (item: GalleryItem) => {
+        logItem: (presetIndex: number, item: GalleryItem) => {
           set((state) => {
-            state.items[item.id] = item;
+            if (presetIndex in state.items) {
+              state.items[presetIndex].push(item);
+            } else {
+              state.items[presetIndex] = [item];
+            }
           });
         },
       })),

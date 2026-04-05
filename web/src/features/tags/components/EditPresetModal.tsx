@@ -1,16 +1,8 @@
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { TooltipActionIcon } from "@/components/TooltipComponents";
+import { ActionIcon, Box, Button, Group, Stack, Text, TextInput } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { Pencil } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
-import {TooltipActionIcon} from "@/components/TooltipComponents"
 
 import { usePresetStore } from "../stores/preset";
 
@@ -53,22 +45,19 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
                   }
                   presetStore.setPresetName(name.toString());
                   modals.closeAll();
-                }}
-              >
+                }}>
                 <TextInput
                   label="Name"
                   name="name"
                   defaultValue={activePreset.name}
                   mb="xl"
-                  data-autofocus
-                />
+                  data-autofocus />
 
                 <Box
                   bg="light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-6))"
                   mx="-md"
                   mb="-md"
-                  p="md"
-                >
+                  p="md">
                   <Group justify="flex-end">
                     <Button variant="default" onClick={modals.closeAll}>
                       Cancel
@@ -84,8 +73,7 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
                           title: "Do you really want to remove this preset?",
                           children: (
                             <Text size="sm">
-                              This action is irrevisible. Your data on this
-                              preset will be lost.
+                              This action is irrevisible. Your data on this preset will be lost.
                             </Text>
                           ),
                           labels: { confirm: "Remove", cancel: "Cancel" },
@@ -96,8 +84,7 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
                             presetStore.removePreset();
                           },
                         });
-                      }}
-                    >
+                      }}>
                       Remove preset
                     </Button>
 
@@ -109,8 +96,7 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
               </form>
             </Stack>
           ),
-        })}
-    >
+        })}>
       <Pencil size={15} />
     </TooltipActionIcon>
   );
