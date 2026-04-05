@@ -16,7 +16,6 @@ export function TooltipActionIcon({ label, children, ...props }: TooltipActionIc
   );
 }
 
-// 2. Applied the exact same fix for the Button
 export type TooltipButtonProps = ButtonProps & ComponentPropsWithoutRef<'button'> & {
   label: ReactNode;
   children: ReactNode;

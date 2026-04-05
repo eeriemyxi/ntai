@@ -1,16 +1,21 @@
+import secrets
 import typing as t
-import random
 
+import platformdirs
+from cache_decorator import Cache
 from curl_cffi import Session
 from yarl import URL
-import platformdirs
 
 from . import types
-from cache_decorator import Cache
 
 NHENTAI_BASE_URL = URL("https://nhentai.net/api/")
 
-@Cache(cache_dir=platformdirs.user_cache_dir("ntai"), validity_duration="30m", args_to_ignore=("session",))
+
+@Cache(
+    cache_dir=platformdirs.user_cache_dir("ntai"),
+    validity_duration="1h",
+    args_to_ignore=("session",),
+)
 def nhentai_search(
     session: Session,
     query: str,
@@ -29,15 +34,26 @@ def nhentai_search(
     return final
 
 
-def find_random_book(session: Session, query: str, sort: types.SortType = types.SortType.DATE) -> types.GalleryItem | None:
+def find_random_book(
+    session: Session,
+    query: str,
+    sort: types.SortType = types.SortType.DATE,
+    blacklist: list[int] | None = None,
+) -> types.GalleryItem | None:
     resp: types.GalleryResponse | None = nhentai_search(session, query, sort, 1)
-    if not resp:
+    if not resp or resp.num_pages == 0:
         return None
 
-    page = random.randint(1, resp.num_pages)
+    blacklist_set = set(blacklist or [])
 
-    nresp = nhentai_search(session, query, sort, page)
-    if not nresp:
-        return None
-    
-    return random.choice(nresp.result)
+    for _ in range(min(3, resp.num_pages)):
+        page = secrets.randbelow(resp.num_pages) + 1
+        nresp = nhentai_search(session, query, sort, page)
+        if not nresp:
+            return None
+
+        valid_books = [book for book in nresp.result if book.id not in blacklist_set]
+        if valid_books:
+            return secrets.choice(valid_books)
+
+    return None

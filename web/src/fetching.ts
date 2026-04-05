@@ -15,7 +15,7 @@ export interface GalleryItem {
   thumbnail_width: number;
   thumbnail_height: number;
   english_title: string;
-  japanese_title?: string; // Optional
+  japanese_title?: string;
   num_pages: number;
   tag_ids: number[];
 }

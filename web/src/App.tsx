@@ -21,8 +21,7 @@ import { Search } from "lucide-react";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
-import { notifications, Notifications } from "@mantine/notifications";
-import {notify} from "@/components/Notifications"
+import { Notifications } from "@mantine/notifications";
 
 function App() {
   const theme = useThemeStore((state) => state.activeTheme);
