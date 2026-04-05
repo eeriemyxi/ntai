@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
+import '@mantine/notifications/styles.css';
 import { ModalsProvider } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
 
@@ -20,6 +21,8 @@ import { Search } from "lucide-react";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
+import { notifications, Notifications } from "@mantine/notifications";
+import {notify} from "@/components/Notifications"
 
 function App() {
   const theme = useThemeStore((state) => state.activeTheme);
@@ -33,6 +36,7 @@ function App() {
 
   return (
     <MantineProvider forceColorScheme={theme}>
+      <Notifications/>
       <ModalsProvider>
         <AppShell>
           <AppShell.Main pos="relative">

@@ -10,6 +10,7 @@ import {
 import { modals } from "@mantine/modals";
 import { Pencil } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
+import {TooltipActionIcon} from "@/components/TooltipComponents"
 
 import { usePresetStore } from "../stores/preset";
 
@@ -27,7 +28,8 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
   );
 
   return (
-    <ActionIcon
+    <TooltipActionIcon
+      label="Configure this preset"
       size={30}
       variant="default"
       onClick={() =>
@@ -110,6 +112,6 @@ export function EditPresetModal({ presetIndex }: { presetIndex?: number; }) {
         })}
     >
       <Pencil size={15} />
-    </ActionIcon>
+    </TooltipActionIcon>
   );
 }

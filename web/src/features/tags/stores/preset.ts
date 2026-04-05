@@ -4,6 +4,8 @@ import { persist } from "zustand/middleware";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import {notify} from "@/components/Notifications"
+
 const DEFAULT_PRESET = { name: "Default Preset", tagList: [] };
 
 interface PresetState {
@@ -47,7 +49,7 @@ export const usePresetStore = create<PresetState>()(
             } else {
               state.presets.push({ name: name, tagList: tagList });
             }
-            toast.success("Added a new preset");
+            notify({message: "Added a new preset"});
           });
         },
         removePreset: (presetIndex?: number) => {
@@ -56,7 +58,7 @@ export const usePresetStore = create<PresetState>()(
 
             const successText = `Removed preset "${state.presets[index].name}"`;
             state.presets.splice(index, 1);
-            toast.success(successText);
+            notify({message:successText});
 
             if (state.presets.length == 0) {
               state.presets.push(DEFAULT_PRESET);
@@ -73,7 +75,7 @@ export const usePresetStore = create<PresetState>()(
               state.presets[index].name
             }" to "${name}"`;
             state.presets[index].name = name;
-            toast.success(successText);
+            notify({message: successText});
           });
         },
         getTags: (presetIndex?: number) => {
@@ -86,11 +88,11 @@ export const usePresetStore = create<PresetState>()(
             const index = presetIndex ?? state.activePreset;
             if (!state.presets[index].tagList.includes(tag)) {
               state.presets[index].tagList.push(tag);
-              toast.success(`Added tag "${tag}"`);
+              notify({message: `Added tag "${tag}"`});
             } else {
-              toast.info(
-                `Skipping adding tag "${tag}" because it already existed`,
-              );
+              notify({
+                message: `Skipping adding tag "${tag}" because it already existed`
+              });
             }
           });
         },
@@ -100,7 +102,7 @@ export const usePresetStore = create<PresetState>()(
             state.presets[index].tagList = state.presets[index].tagList.filter(
               (t) => t != tag,
             );
-            toast.success(`Removed tag "${tag}"`);
+            notify({message: `Removed tag "${tag}"`});
           });
         },
         popTag: (presetIndex?: number) => {
@@ -113,7 +115,7 @@ export const usePresetStore = create<PresetState>()(
                 0,
                 -1,
               );
-              toast.success(`Popped last tag "${lastTag}"`);
+              notify({message: `Popped last tag "${lastTag}"`});
             }
           });
           return lastTag;

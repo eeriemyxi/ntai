@@ -16,6 +16,8 @@ import { useShallow } from "zustand/react/shallow";
 import { usePresetStore } from "../stores/preset";
 import { EditPresetModal } from "./";
 
+import {TooltipActionIcon} from "@/components/TooltipComponents"
+
 export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
   const activePreset = usePresetStore((state) => {
     const index = presetIndex ?? state.activePreset;
@@ -82,7 +84,8 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
           )}
 
         <Group wrap="nowrap" gap="sm">
-          <ActionIcon
+          <TooltipActionIcon
+            label="Previous preset"
             variant="default"
             size="lg"
             radius="md"
@@ -90,7 +93,7 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
               presetStore.setActivePreset(presetStore.activePresetIndex - 1)}
           >
             <ChevronLeft size={18} />
-          </ActionIcon>
+          </TooltipActionIcon>
 
           <TextInput
             placeholder="Type the tag then hit enter/tab to add"
@@ -115,20 +118,18 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
             }}
           />
 
-          <Tooltip label="Next preset">
-            <ActionIcon
-              variant="default"
-              size="lg"
-              radius="md"
-              onClick={() =>
+          <TooltipActionIcon
+            label="Next preset"
+            variant="default"
+            size="lg"
+            radius="md"
+            onClick={() =>
                 presetStore.setActivePreset(presetStore.activePresetIndex + 1)}
             >
               <ChevronRight size={18} />
-            </ActionIcon>
-          </Tooltip>
+        </TooltipActionIcon>
 
-          <Tooltip label="Create a new preset (not tag!)">
-            <ActionIcon
+          <TooltipActionIcon label="Create a new preset (not tag!)"
               variant="filled"
               size="lg"
               radius="xl"
@@ -138,8 +139,7 @@ export function TagMenu({ presetIndex }: { presetIndex?: number; }) {
               }}
             >
               <Plus size={18} />
-            </ActionIcon>
-          </Tooltip>
+        </TooltipActionIcon>
         </Group>
       </Stack>
     </Paper>
