@@ -51,15 +51,12 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Expose Bun globally (macOS/Linux hosts)
-        if: runner.os != 'Windows'
-        run: sudo ln -sf "$HOME/.bun/bin/bun" /usr/local/bin/bun
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.4.1
         env:
           CIBW_PLATFORM: ${{ matrix.platform || 'auto' }}
           CIBW_ARCHS: ${{ matrix.archs || 'auto' }}
+          CIBW_XBUILD_TOOLS: bun
           CIBW_BEFORE_ALL_LINUX: >
             curl -fsSL https://bun.sh/install | bash &&
             ln -s /root/.bun/bin/bun /usr/local/bin/bun
