@@ -6,68 +6,8 @@ on:
       - "v*"
 
 jobs:
-  build_wheels:
-    name: Build wheels for ${{ matrix.os }}
-    runs-on: ${{ matrix.runs-on }}
-    strategy:
-      matrix:
-        include:
-          - os: linux-intel
-            runs-on: ubuntu-latest
-          - os: linux-arm
-            runs-on: ubuntu-24.04-arm
-          - os: windows-intel
-            runs-on: windows-latest
-          - os: windows-arm
-            runs-on: windows-11-arm
-          - os: macos-intel
-            # macos-15-intel is the last x86_64 runner
-            runs-on: macos-15-intel
-          - os: macos-arm
-            # macos-14+ (including latest) are ARM64 runners
-            runs-on: macos-latest
-          - os: android-intel
-            runs-on: ubuntu-latest
-            platform: android
-          - os: android-arm
-            # GitHub Actions doesn’t currently support the Android emulator on any ARM
-            # runner. So we build on a non-ARM runner, which will skip the tests.
-            runs-on: ubuntu-latest
-            platform: android
-            archs: arm64_v8a
-          - os: ios
-            runs-on: macos-latest
-            platform: ios
-          - os: pyodide
-            runs-on: ubuntu-latest
-            platform: pyodide
-
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v3.4.1
-        env:
-          CIBW_PLATFORM: ${{ matrix.platform || 'auto' }}
-          CIBW_ARCHS: ${{ matrix.archs || 'auto' }}
-          CIBW_XBUILD_TOOLS: bun
-          CIBW_BEFORE_ALL_LINUX: >
-            curl -fsSL https://bun.sh/install | bash &&
-            ln -s /root/.bun/bin/bun /usr/local/bin/bun
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-          path: ./wheelhouse/*.whl
-
-  build_sdist:
-    name: Build source distribution
+  build_distributions:
+    name: Build source and wheel
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -78,16 +18,16 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Build sdist
-        run: pipx run build --sdist
+      - name: Build sdist and wheel
+        run: pipx run build 
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cibw-sdist
-          path: dist/*.tar.gz
+          name: dist-files
+          path: dist/*
 
   upload_pypi:
-    needs: [build_wheels, build_sdist]
+    needs: [build_distributions]
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
@@ -95,8 +35,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v5
         with:
-          pattern: cibw-*
+          name: dist-files 
           path: dist
-          merge-multiple: true
 
       - uses: pypa/gh-action-pypi-publish@release/v1
