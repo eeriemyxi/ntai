@@ -3,8 +3,6 @@ import sys
 import click
 from loguru import logger as log
 
-from ntai import PACKAGE_NAME
-
 from .server import app
 
 
