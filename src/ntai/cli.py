@@ -1,43 +1,92 @@
+import sys
+
 import click
 from loguru import logger as log
 
-from . import DEVELOPMENT, SERVER_HOST, SERVER_PORT, app
+from .server import app
 
 
 @click.group()
-def main():
+@click.option(
+    "--log-level",
+    "-L",
+    type=click.Choice(
+        ["TRACE", "DEBUG", "INFO", "SUCCESS", "WARNING", "CRITICAL", "ERROR"]
+    ),
+    default="INFO",
+)
+def main(log_level: str):
+    log.remove()
+    _ = log.add(sys.stderr, level=log_level)
+
     pass
 
 
+@click.option(
+    "--host",
+    help="The hostname the web app will bind to.",
+    envvar="HOST",
+    default="0.0.0.0",
+)
+@click.option(
+    "--port",
+    help="The port the web app will bind to.",
+    envvar="PORT",
+    default=5000,
+)
+@click.option(
+    "-o",
+    "--open",
+    "flag_open",
+    help="Open the web app on your browser automatically.",
+    is_flag=True,
+    default=True,
+)
+@click.option(
+    "--dev-mode",
+    help="Starts the servers in development mode.",
+    envvar="DEVELOPMENT",
+    is_flag=True,
+    hidden=True,
+    default=False,
+)
 @main.command("web")
-def cmd_web():
+def cmd_web(host: str, port: int, dev_mode: bool, flag_open: bool):
     import uvicorn
     from fastapi.staticfiles import StaticFiles
 
+    if flag_open:
+        import threading
+        import webbrowser
+
+        threading.Timer(
+            0.3, webbrowser.open_new_tab, args=(f"http://{host}:{port}/",)
+        ).start()
+
     from . import SERVE_DIR
 
-    if not DEVELOPMENT:
+    if not dev_mode:
         app.mount("/", StaticFiles(directory=str(SERVE_DIR), html=True), name="web")
-        uvicorn.run(app, port=5000)
+        uvicorn.run(app, host=host, port=port)
     else:
         import os
         import pathlib
         import subprocess
 
-        API_HOST = SERVER_HOST
+        API_HOST = host
         API_PORT = 50539
         env = os.environ.copy()
         env.update(
             dict(
                 API_PORT=str(API_PORT),
                 API_HOST=API_HOST,
-                SERVER_PORT=str(SERVER_PORT),
-                SERVER_HOST=SERVER_HOST,
+                SERVER_PORT=str(port),
+                SERVER_HOST=host,
             )
         )
 
         log.info(
-            f"Starting the API on {SERVER_HOST}:{API_PORT} and proxying it to {SERVER_HOST}:{SERVER_PORT}/api..."
+            f"Serving the backend API on {host}:{API_PORT} and proxying it to {host}:{port}/api..."
         )
         log.debug(f"{env=}")
 
@@ -47,11 +96,11 @@ def cmd_web():
             env=env,
         )
         uvicorn.run(
-            "ntai:app",
+            "ntai:server.app",
             port=API_PORT,
-            host=SERVER_HOST,
+            host=host,
             reload=True,
-            reload_dirs=[pathlib.Path(__file__).parent],
+            reload_dirs=[str(pathlib.Path(__file__).parent)],
         )
 
 
