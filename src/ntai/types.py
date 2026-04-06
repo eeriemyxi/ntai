@@ -3,11 +3,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+
 class ErrorType(int, Enum):
     OK = 1
     NO_PAGES = 2
     NO_RESPONSE = 3
-    
+
 
 class SortType(str, Enum):
     DATE = "date"

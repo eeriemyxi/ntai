@@ -4,8 +4,8 @@ import typing as t
 import platformdirs
 from cache_decorator import Cache
 from curl_cffi import Session
-from yarl import URL
 from loguru import logger as log
+from yarl import URL
 
 from . import types
 
@@ -66,12 +66,14 @@ def find_random_book(
 
         valid_books = [book for book in nresp.result if book.id not in blacklist_set]
         log.info(f"All books: {[b.id for b in nresp.result]}")
-        log.info(f"Valid books: {[b.id for b in valid_books]}, total {len(valid_books)} out of {len(nresp.result)}")
+        log.info(
+            f"Valid books: {[b.id for b in valid_books]}, total {len(valid_books)} out of {len(nresp.result)}"
+        )
 
         if valid_books:
             choice = secrets.choice(valid_books)
             log.success(f"{choice.id=} was randomly selected from valid books")
             return choice, None
-    
+
     log.info("Return None because no pages are left to check")
     return None, types.ErrorType.NO_PAGES

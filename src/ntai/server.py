@@ -1,13 +1,14 @@
 import typing as t
 
 from curl_cffi import Session
-from fastapi import FastAPI, Query, Depends, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 from . import core, types
 
 app = FastAPI(root_path="/api")
 session = Session()
+
 
 def parse_blacklist(
     blacklist: str | None = Query(
@@ -16,11 +17,14 @@ def parse_blacklist(
 ) -> list[int]:
     if not blacklist:
         return []
-    
+
     try:
         return [int(item.strip()) for item in blacklist.split(",") if item.strip()]
     except ValueError:
-        raise HTTPException(status_code=422, detail="Blacklist items must be valid integers.")
+        raise HTTPException(
+            status_code=422, detail="Blacklist items must be valid integers."
+        )
+
 
 @app.get("/nhentai/search")
 def nhentai_search(
