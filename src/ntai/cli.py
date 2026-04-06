@@ -3,6 +3,8 @@ import sys
 import click
 from loguru import logger as log
 
+from ntai import PACKAGE_NAME
+
 from .server import app
 
 
@@ -15,6 +17,7 @@ from .server import app
     ),
     default="INFO",
 )
+@click.version_option(None, "--version", "-v", "-V", package_name="myxi-ntai")
 def main(log_level: str):
     log.remove()
     _ = log.add(sys.stderr, level=log_level)
