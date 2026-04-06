@@ -579,8 +579,7 @@ wheels = [
 ]
 
 [[package]]
-name = "ntai"
-version = "0.1.0"
+name = "myxi-ntai"
 source = { editable = "." }
 dependencies = [
     { name = "cache-decorator" },

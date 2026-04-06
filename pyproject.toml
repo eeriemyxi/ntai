@@ -1,7 +1,6 @@
 [project]
-name = "ntai"
-version = "0.1.0"
-description = "Add your description here"
+name = "myxi-ntai"
+description = "Find random nHentai books based on specified search query. Succesor of Firush."
 readme = "README.md"
 authors = [
     { name = "eeriemyxi", email = "myxi@envs.net" }
@@ -18,9 +17,13 @@ dependencies = [
     "uvicorn>=0.42.0",
     "yarl>=1.23.0",
 ]
+dynamic = ["version"]
 
 [project.scripts]
 ntai = "ntai.cli:main"
+
+[tool.hatch.version]
+source = "vcs"
 
 [tool.hatch.build.targets.wheel.hooks.custom]
 path = "hooks/build_hooks.py"
@@ -35,7 +38,7 @@ exclude = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.pyright]
