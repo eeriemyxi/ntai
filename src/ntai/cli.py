@@ -106,4 +106,4 @@ def cmd_web(host: str, port: int, dev_mode: bool, flag_open: bool):
 
 @main.command("tui")
 def cmd_tui():
-    pass
+    click.echo("The TUI client is yet to be implemented.")
