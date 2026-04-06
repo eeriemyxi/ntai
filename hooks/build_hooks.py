@@ -11,22 +11,19 @@ SERVE_DIR = HERE / "../src/ntai/data/serve"
 
 class ProcessDataHook(BuildHookInterface):
     def initialize(self, version, build_data):
-        ui_already_built = (SERVE_DIR / "index.html").exists()
-
-        if not ui_already_built:
-            subprocess.run(["bun", "install"], cwd=WEB_DIR, check=True)
-            subprocess.run(
-                [
-                    "bun",
-                    "run",
-                    "build",
-                    "--outDir",
-                    str(SERVE_DIR.resolve()),
-                    "--emptyOutDir",
-                ],
-                cwd=WEB_DIR,
-                check=True,
-            )
+        subprocess.run(["bun", "install"], cwd=WEB_DIR, check=True)
+        subprocess.run(
+            [
+                "bun",
+                "run",
+                "build",
+                "--outDir",
+                str(SERVE_DIR.resolve()),
+                "--emptyOutDir",
+            ],
+            cwd=WEB_DIR,
+            check=True,
+        )
 
         if self.target_name == "sdist":
             build_data["force_include"][

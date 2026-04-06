@@ -22,8 +22,17 @@ dependencies = [
 [project.scripts]
 ntai = "ntai.cli:main"
 
-[tool.hatch.build.hooks.custom]
+[tool.hatch.build.targets.wheel.hooks.custom]
 path = "hooks/build_hooks.py"
+
+[tool.hatch.build.targets.editable.hooks.custom]
+path = "hooks/build_hooks.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "node_modules",
+  "web/node_modules", 
+]
 
 [build-system]
 requires = ["hatchling"]
