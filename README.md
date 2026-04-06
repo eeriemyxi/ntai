@@ -26,3 +26,62 @@ on the API instead for the page count and book information.
 
 </details>
 
+# Installation
+This package exports the binaries `ntai` nad `myxi-ntai` that you can use after
+installation.
+
+## From PyPi
+
+You can install the PyPi package:
+```
+pip install myxi-ntai
+```
+
+> [!TIP]
+> You can also use [`uv`](https://docs.astral.sh/uv/getting-started/installation/) like so: 
+> ```
+> uv tool install myxi-ntai
+> ```
+
+## From Source
+> [!IMPORTANT]
+> Installation of [Git](https://git-scm.com/) is required.
+
+```
+pip install git+https://github.com/eeriemyxi/myxi-ntai.git
+```
+
+# How To Use
+There are two clients, web and TUI.
+
+To use the web version, simply do:
+
+```
+ntai web
+```
+
+
+Or the TUI version:
+
+> [!IMPORTANT]
+> The TUI version is yet to be implemented.
+
+```
+ntai tui
+```
+
+You could also check out `ntai [tui,web] --help` :)
+
+# Command-line Arguments
+```
+Usage: ntai [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  -L, --log-level [TRACE|DEBUG|INFO|SUCCESS|WARNING|CRITICAL|ERROR]
+  -v, -V, --version               Show the version and exit.
+  --help                          Show this message and exit.
+
+Commands:
+  tui
+  web
+```
