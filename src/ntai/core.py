@@ -2,14 +2,27 @@ import secrets
 import typing as t
 
 import platformdirs
-from cache_decorator import Cache
-from curl_cffi import Session
+from cache_decorator import \
+    Cache as UntypedCache  # type: ignore[reportMissingStubs]
+from curl_cffi import Response, Session
 from loguru import logger as log
 from yarl import URL
 
 from . import types
 
 NHENTAI_BASE_URL = URL("https://nhentai.net/api/")
+
+P = t.ParamSpec("P")
+R = t.TypeVar("R")
+
+
+def Cache(*args: t.Any, **kwargs: t.Any) -> t.Callable[[t.Callable[P, R]], t.Callable[P, R]]:  # type: ignore[reportAny]
+    """Typed wrapper for the untyped Cache decorator."""
+
+    def decorator(func: t.Callable[P, R]) -> t.Callable[P, R]:
+        return t.cast(t.Callable[P, R], UntypedCache(*args, **kwargs)(func))  # type: ignore[reportAny]
+
+    return decorator
 
 
 @Cache(
@@ -18,7 +31,7 @@ NHENTAI_BASE_URL = URL("https://nhentai.net/api/")
     args_to_ignore=("session",),
 )
 def nhentai_search(
-    session: Session,
+    session: Session[Response],
     query: str,
     sort: types.SortType = types.SortType.DATE,
     page: int = 1,
@@ -27,7 +40,7 @@ def nhentai_search(
         dict(query=query, sort=sort.value, page=page)
     )
     resp = session.get(str(url))
-    resp_json = t.cast(dict[t.Any, t.Any], resp.json())  # type: ignore
+    resp_json = t.cast(dict[t.Any, t.Any], resp.json())
     if resp.status_code == 200:
         final = types.GalleryResponse.model_validate(resp_json)
     else:
@@ -36,12 +49,12 @@ def nhentai_search(
 
 
 def find_random_book(
-    session: Session,
+    session: Session[Response],
     query: str,
     sort: types.SortType = types.SortType.DATE,
     blacklist: list[int] | None = None,
 ) -> tuple[types.GalleryItem | None, types.ErrorType | None]:
-    resp: types.GalleryResponse | None = nhentai_search(session, query, sort, 1)
+    resp = nhentai_search(session, query, sort, 1)
     if not resp:
         log.info(f"Returning None because {resp=}")
         return None, types.ErrorType.NO_RESPONSE
