@@ -27,8 +27,9 @@ on the API instead for the page count and book information.
 </details>
 
 # Installation
-This package exports the binaries `ntai` nad `myxi-ntai` that you can use after
-installation.
+> [!NOTE]
+> This package exports binaries `ntai` and `myxi-ntai` which are available
+after installation.
 
 ## From PyPi
 
