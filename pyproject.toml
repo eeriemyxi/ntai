@@ -21,6 +21,10 @@ dynamic = ["version"]
 
 [project.scripts]
 ntai = "ntai.cli:main"
+myxi-ntai = "ntai.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ntai"]
 
 [tool.hatch.version]
 source = "vcs"
