@@ -1,6 +1,6 @@
 [project]
 name = "myxi-ntai"
-description = "Find random nHentai books based on specified search query. Succesor of Firush."
+description = "Find random nHentai books based on specified search query. Successor of Firush."
 readme = "README.md"
 authors = [
     { name = "eeriemyxi", email = "myxi@envs.net" }
