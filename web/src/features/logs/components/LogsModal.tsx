@@ -7,7 +7,7 @@ import {
   SimpleGrid,
   Stack,
   Tabs,
-  Title,
+  Text,
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
@@ -15,22 +15,84 @@ import { modals } from "@mantine/modals";
 import { History } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
-import { bookUrl, thumbnailUrl } from "@/fetching";
-
+import { TooltipButton } from "@/components/TooltipComponents";
 import { usePresetStore } from "@/features/tags/";
+import { bookUrl, thumbnailUrl } from "@/fetching";
 import { useLogsStore } from "../";
 import classes from "./Styles.module.css";
 
-export function LogsModal() {
+function LogsModalContent() {
   const logStore = useLogsStore(
-    useShallow((state) => ({ items: state.items, logItem: state.logItem })),
+    useShallow((state) => ({
+      items: state.items,
+      logItem: state.logItem,
+      removeLogItem: state.removeLogItem,
+    })),
   );
+
   const presetStore = usePresetStore(
     useShallow((state) => ({
       activePresetIndex: state.activePreset,
       presets: state.presets,
     })),
   );
+
+  return (
+    <Stack>
+      <Tabs defaultValue={presetStore.activePresetIndex.toString()}>
+        <Tabs.List mb="md">
+          {presetStore.presets.map((preset, index) => (
+            <Tabs.Tab key={index} value={index.toString()}>
+              {`(${index + 1}) ${preset.name}`}
+            </Tabs.Tab>
+          ))}
+        </Tabs.List>
+        {Object.entries(logStore.items).map(([index, books]) => (
+          <Tabs.Panel value={index.toString()} key={index}>
+            <SimpleGrid cols={{ base: 1, sm: 3, md: 4, lg: 5 }}>
+              {Object.values(books).map((model, idx) => (
+                <Paper
+                  key={idx}
+                  withBorder
+                  component="a"
+                  href={bookUrl(model)}
+                  target="_blank"
+                  className={classes.nativeMantineFeel}
+                  p="md">
+                  <Stack h="100%">
+                    <Image
+                      src={thumbnailUrl(model)}
+                      alt={model.english_title}
+                      fit="scale-down"
+                      h="250" />
+                    <Center flex={1} w="100%">
+                      <Stack w="100%">
+                        <Text c="white" ta="center" lineClamp={3}>{model.english_title}</Text>
+                        <TooltipButton
+                          label="Remove this entry from logs"
+                          variant="outline"
+                          color="red"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            logStore.removeLogItem(presetStore.activePresetIndex, undefined, idx);
+                          }}>
+                          Dismiss
+                        </TooltipButton>
+                      </Stack>
+                    </Center>
+                  </Stack>
+                </Paper>
+              ))}
+            </SimpleGrid>
+          </Tabs.Panel>
+        ))}
+      </Tabs>
+    </Stack>
+  );
+}
+
+export function LogsModal() {
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
@@ -54,46 +116,7 @@ export function LogsModal() {
               scrollHideDelay={100}
               offsetScrollbars />
           ),
-          children: (
-            <Stack>
-              <Tabs defaultValue={presetStore.activePresetIndex.toString()}>
-                <Tabs.List mb="md">
-                  {presetStore.presets.map((preset, index) => (
-                    <Tabs.Tab key={index} value={index.toString()}>
-                      {`(${index + 1}) ${preset.name}`}
-                    </Tabs.Tab>
-                  ))}
-                </Tabs.List>
-                {Object.entries(logStore.items).map(([index, books]) => (
-                  <Tabs.Panel value={index.toString()} key={index}>
-                    <SimpleGrid cols={{ base: 1, sm: 3, md: 4, lg: 5 }}>
-                      {Object.values(books).map((model, index) => (
-                        <Paper
-                          key={index}
-                          withBorder
-                          component="a"
-                          href={bookUrl(model)}
-                          target="_blank"
-                          className={classes.nativeMantineFeel}
-                          p="md">
-                          <Stack h="100%">
-                            <Image
-                              src={thumbnailUrl(model)}
-                              alt={model.english_title}
-                              fit="scale-down"
-                              h="90%" />
-                            <Center flex={1}>
-                              <Title order={6} c="white" ta="center">{model.english_title}</Title>
-                            </Center>
-                          </Stack>
-                        </Paper>
-                      ))}
-                    </SimpleGrid>
-                  </Tabs.Panel>
-                ))}
-              </Tabs>
-            </Stack>
-          ),
+          children: <LogsModalContent />,
         })}>
       History
     </Button>
