@@ -16,11 +16,10 @@ from .server import app
     default="INFO",
 )
 @click.version_option(None, "--version", "-v", "-V", package_name="myxi-ntai")
-def main(log_level: str):
+def main(log_level: str) -> None:
     log.remove()
     _ = log.add(sys.stderr, level=log_level)
 
-    pass
 
 
 @click.option(
@@ -52,7 +51,7 @@ def main(log_level: str):
     default=False,
 )
 @main.command("web")
-def cmd_web(host: str, port: int, dev_mode: bool, flag_open: bool):
+def cmd_web(host: str, port: int, dev_mode: bool, flag_open: bool) -> None:
     import uvicorn
     from fastapi.staticfiles import StaticFiles
 
@@ -106,5 +105,5 @@ def cmd_web(host: str, port: int, dev_mode: bool, flag_open: bool):
 
 
 @main.command("tui")
-def cmd_tui():
+def cmd_tui() -> None:
     click.echo("The TUI client is yet to be implemented.")

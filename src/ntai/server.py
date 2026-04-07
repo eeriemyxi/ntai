@@ -1,4 +1,3 @@
-import typing as t
 
 from curl_cffi import Session
 from fastapi import Depends, FastAPI, HTTPException, Query
@@ -7,13 +6,13 @@ from fastapi.responses import JSONResponse
 from . import core, types
 
 app = FastAPI(root_path="/api")
-session = Session()  # type: ignore
+session = Session()
 
 
 def parse_blacklist(
     blacklist: str | None = Query(
         None, description="A comma-separated list of integer book ids to be blacklisted"
-    )  # type: ignore
+    )
 ) -> list[int]:
     if not blacklist:
         return []
@@ -30,7 +29,7 @@ def parse_blacklist(
 def nhentai_search(
     query: str, sort: types.SortType = types.SortType.DATE, page: int = 1
 ):
-    result = core.nhentai_search(session, query, sort, page)  # type: ignore
+    result = core.nhentai_search(session, query, sort, page)
     if not result:
         raise HTTPException(500)
     return JSONResponse(result.model_dump())

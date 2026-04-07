@@ -2,14 +2,12 @@ import secrets
 import typing as t
 
 import platformdirs
+from cache_decorator import Cache
 from curl_cffi import Response, Session
 from loguru import logger as log
 from yarl import URL
 
 from . import types
-
-from cache_decorator import Cache
-
 
 NHENTAI_BASE_URL = URL("https://nhentai.net/api/")
 

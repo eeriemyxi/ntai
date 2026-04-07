@@ -1,5 +1,5 @@
-import importlib.util
 import subprocess
+import typing as t
 from pathlib import Path
 
 from hatchling.builders.hooks.plugin.interface import BuildHookInterface
@@ -7,14 +7,16 @@ from hatchling.builders.hooks.plugin.interface import BuildHookInterface
 HERE = Path(__file__).parent.resolve()
 WEB_DIR = HERE / "../web"
 SERVE_DIR = HERE / "../src/ntai/data/serve"
+BUN_PATH = "bun"
 
 
-class ProcessDataHook(BuildHookInterface):
-    def initialize(self, version, build_data):
-        subprocess.run(["bun", "install"], cwd=WEB_DIR, check=True)
-        subprocess.run(
+class ProcessDataHook(BuildHookInterface[t.Any]):
+    @t.override
+    def initialize(self, version: str, build_data: dict[str, t.Any]) -> None:
+        _ = subprocess.run([BUN_PATH, "install"], cwd=WEB_DIR, check=True)
+        _ = subprocess.run(
             [
-                "bun",
+                BUN_PATH,
                 "run",
                 "build",
                 "--outDir",
@@ -31,10 +33,3 @@ class ProcessDataHook(BuildHookInterface):
             ] = "src/ntai/data/serve"
         elif self.target_name == "wheel":
             build_data["force_include"][str(SERVE_DIR.resolve())] = "ntai/data/serve"
-
-
-def _load(name, file):
-    spec = importlib.util.spec_from_file_location(name, HERE / file)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module

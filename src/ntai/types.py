@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -25,13 +24,13 @@ class GalleryItem(BaseModel):
     thumbnail_width: int
     thumbnail_height: int
     english_title: str
-    japanese_title: Optional[str]
+    japanese_title: str | None
     num_pages: int
-    tag_ids: List[int]
+    tag_ids: list[int]
 
 
 class GalleryResponse(BaseModel):
-    result: List[GalleryItem]
+    result: list[GalleryItem]
     num_pages: int
     per_page: int
     total: int

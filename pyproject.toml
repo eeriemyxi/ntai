@@ -23,6 +23,16 @@ dynamic = ["version"]
 ntai = "ntai.cli:main"
 myxi-ntai = "ntai.cli:main"
 
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+  "hatchling>=1.29.0",
+  "pre-commit>=4.5.1",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ntai"]
 
@@ -41,15 +51,6 @@ exclude = [
   "web/node_modules",
 ]
 
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
-
-[dependency-groups]
-dev = [
-  "pre-commit>=4.5.1",
-]
-
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
@@ -57,3 +58,6 @@ enableTypeIgnoreComments = true
 
 [tool.uv.sources]
 cache-decorator = { git = "https://github.com/eeriemyxi-contributions/cache_decorator" }
+
+[tool.ruff.lint]
+ignore = ["S104", "N806", "C408", "B008"]
