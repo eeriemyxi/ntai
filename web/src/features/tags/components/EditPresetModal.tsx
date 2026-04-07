@@ -5,6 +5,7 @@ import { Pencil } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 import { SimpleSwitch } from "@/components/SimpleSwitch";
+import { useLogsStore } from "@/features/logs";
 import { usePresetStore } from "../stores/preset";
 
 function EditPresetForm({ presetIndex }: { presetIndex?: number; }) {
@@ -15,6 +16,12 @@ function EditPresetForm({ presetIndex }: { presetIndex?: number; }) {
       removePreset: state.removePreset,
       setPresetName: state.setPresetName,
       setBlacklistStatus: state.setBlacklistStatus,
+    })),
+  );
+
+  const logsStore = useLogsStore(
+    useShallow((state) => ({
+      removeLogIndex: state.removeLogIndex,
     })),
   );
 
@@ -83,8 +90,9 @@ function EditPresetForm({ presetIndex }: { presetIndex?: number; }) {
                   confirmProps: { color: "red", variant: "outline" },
                   onCancel: () => modals.close("remove-preset-confirm"),
                   onConfirm: () => {
+                    presetStore.removePreset(presetStore.activePresetIndex);
+                    logsStore.removeLogIndex(presetStore.activePresetIndex);
                     modals.closeAll();
-                    presetStore.removePreset();
                   },
                 });
               }}>

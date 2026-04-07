@@ -24,7 +24,7 @@ interface PresetState {
 export const usePresetStore = create<PresetState>()(
   persist(
     immer(
-      devtools((set, get) => ({
+      devtools((set, get): PresetState => ({
         activePreset: 0,
         setActivePreset: (presetIndex: number) => {
           set((state) => {

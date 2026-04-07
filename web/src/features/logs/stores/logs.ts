@@ -8,13 +8,14 @@ import { type GalleryItem } from "@/fetching";
 interface LogsState {
   items: Record<number, GalleryItem[]>;
   logItem: (presetIndex: number, item: GalleryItem) => void;
+  removeLogIndex: (presetIndex: number) => void;
   isAlreadyLogged: (presetIndex: number, item: GalleryItem) => boolean;
 }
 
 export const useLogsStore = create<LogsState>()(
   persist(
     immer(
-      devtools((set, get) => ({
+      devtools((set, get): LogsState => ({
         items: {},
         logItem: (presetIndex: number, item: GalleryItem) => {
           set((state) => {
@@ -26,6 +27,11 @@ export const useLogsStore = create<LogsState>()(
             } else {
               state.items[presetIndex] = [item];
             }
+          });
+        },
+        removeLogIndex: (presetIndex: number) => {
+          set(state => {
+            delete state.items[presetIndex];
           });
         },
         isAlreadyLogged: (presetIndex: number, item: GalleryItem): boolean => {

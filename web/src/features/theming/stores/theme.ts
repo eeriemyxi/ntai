@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { Theme } from "../";
+import { Theme } from "../types";
 
 interface ThemeState {
   activeTheme: Theme;
@@ -13,8 +13,8 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     immer(
-      devtools((set) => ({
-        activeTheme: "light",
+      devtools((set): ThemeState => ({
+        activeTheme: Theme.Light,
         setActiveTheme: (theme: Theme) => {
           set((state) => {
             state.activeTheme = theme;
