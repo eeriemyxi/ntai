@@ -1,11 +1,13 @@
 import {
   Button,
+  Center,
   Image,
   Paper,
   ScrollArea,
   SimpleGrid,
   Stack,
   Tabs,
+  Title,
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
@@ -74,13 +76,15 @@ export function LogsModal() {
                           target="_blank"
                           className={classes.nativeMantineFeel}
                           p="md">
-                          <Stack>
+                          <Stack h="100%">
                             <Image
                               src={thumbnailUrl(model)}
                               alt={model.english_title}
                               fit="scale-down"
-                              h={250} />
-                            <h1 className="font-bold">{model.english_title}</h1>
+                              h="90%" />
+                            <Center flex={1}>
+                              <Title order={6} c="white" ta="center">{model.english_title}</Title>
+                            </Center>
                           </Stack>
                         </Paper>
                       ))}
