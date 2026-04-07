@@ -15,11 +15,11 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      host: env.SERVER_HOST || undefined,
+      port: env.SERVER_PORT ? Number(env.SERVER_PORT) : undefined,
       proxy: {
         "/api": {
           target,
-          host: env.SERVER_HOST || undefined,
-          port: env.SERVER_PORT || undefined,
           changeOrigin: true,
           rewrite: (path: string) => path.replace(/^\/api/, ""),
         },
