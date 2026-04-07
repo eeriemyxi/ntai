@@ -8,9 +8,7 @@
 }
 
 .liftOnHover {
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .liftOnHover:hover {
@@ -25,9 +23,7 @@
 
 .nativeMantineFeel {
   /* Mantine's default transition speed is lightning fast (100ms) */
-  transition:
-    background-color 100ms ease,
-    transform 100ms ease;
+  transition: background-color 100ms ease, transform 100ms ease;
 }
 
 .nativeMantineFeel:hover {

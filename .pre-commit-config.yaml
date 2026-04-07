@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/trim21/dprint-pre-commit
+    rev: "v0.53.1.0"
+    hooks:
+      - id: dprint
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.9
+    hooks:
+      - id: ruff
+        args: [--fix, --unsafe-fix]
+
+  - repo: local
+    hooks:
+      - id: bun-tsc
+        name: bun tsc
+        entry: bun run tsc -b web/
+        language: system
+        types_or: [ts, tsx]
+        pass_filenames: false
