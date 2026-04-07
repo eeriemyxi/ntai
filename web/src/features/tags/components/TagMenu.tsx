@@ -1,15 +1,4 @@
-import {
-  ActionIcon,
-  Badge,
-  Divider,
-  Group,
-  Paper,
-  Pill,
-  Stack,
-  Text,
-  TextInput,
-  Tooltip,
-} from "@mantine/core";
+import { Badge, Divider, Group, Paper, Pill, Stack, Text, TextInput } from "@mantine/core";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
