@@ -14,7 +14,7 @@ repos:
     hooks:
       - id: bun-tsc
         name: bun tsc
-        entry: bun run tsc -b web/
+        entry: bun run tsc -b web/ -i
         language: system
         types_or: [ts, tsx]
         pass_filenames: false
