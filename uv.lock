@@ -38,8 +38,8 @@ wheels = [
 
 [[package]]
 name = "cache-decorator"
-version = "2.2.0"
-source = { registry = "https://pypi.org/simple" }
+version = "2.3.0"
+source = { git = "https://github.com/eeriemyxi-contributions/cache_decorator#c683851f14c9f4099d17d66906d4b18f406368db" }
 dependencies = [
     { name = "compress-json" },
     { name = "compress-pickle" },
@@ -47,7 +47,6 @@ dependencies = [
     { name = "dict-hash" },
     { name = "humanize" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bd/52/b372ebef6d7e8322dd46ff176fa91cb8374adee85ec54fd6b13bbe0a8eaf/cache_decorator-2.2.0.tar.gz", hash = "sha256:ebb427b5acb00fb0a47ed9fc7d52fe96de94f40ca52f381205ace8756df6df5a", size = 35875, upload-time = "2024-01-26T11:19:01.42Z" }
 
 [[package]]
 name = "certifi"
@@ -595,7 +594,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cache-decorator", specifier = ">=2.2.0" },
+    { name = "cache-decorator", git = "https://github.com/eeriemyxi-contributions/cache_decorator" },
     { name = "click", specifier = ">=8.3.1" },
     { name = "curl-cffi", specifier = ">=0.14.0" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.135.3" },

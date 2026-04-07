@@ -8,22 +8,10 @@ from yarl import URL
 
 from . import types
 
-from cache_decorator import Cache as UntypedCache  # type: ignore[reportMissingStubs] # isort: skip
+from cache_decorator import Cache
 
 
 NHENTAI_BASE_URL = URL("https://nhentai.net/api/")
-
-P = t.ParamSpec("P")
-R = t.TypeVar("R")
-
-
-def Cache(*args: t.Any, **kwargs: t.Any) -> t.Callable[[t.Callable[P, R]], t.Callable[P, R]]:  # type: ignore[reportAny]
-    """Typed wrapper for the untyped Cache decorator."""
-
-    def decorator(func: t.Callable[P, R]) -> t.Callable[P, R]:
-        return t.cast(t.Callable[P, R], UntypedCache(*args, **kwargs)(func))  # type: ignore[reportAny]
-
-    return decorator
 
 
 @Cache(
