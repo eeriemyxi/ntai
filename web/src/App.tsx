@@ -36,7 +36,7 @@ function App() {
               <LogsModal />
               <SettingsDrawer />
             </Group>
-            <Center h="100vh">
+            <Center h="100dvh">
               <Stack w="100%">
                 <TagMenu />
                 <Tooltip label="Search for a random book based on this preset">
