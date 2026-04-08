@@ -1,6 +1,6 @@
-import { AppShell, Button, Center, Group, MantineProvider, Stack, Tooltip } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import { AppShell, Button, Center, Group, MantineProvider, Stack, Tooltip } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
 
