@@ -1,4 +1,5 @@
 export const NHENTAI_ORIGIN = "https://nhentai.net";
+export const CUBARI_ORIGIN = "https://cubari.moe";
 
 export enum SortType {
   DATE = "date",
@@ -39,8 +40,12 @@ export function thumbnailUrl(item: GalleryItem) {
   return url.toString();
 }
 
-export function bookUrl(item: GalleryItem) {
-  return new URL(`/g/${item.id}`, NHENTAI_ORIGIN).toString();
+export function bookUrl(item: GalleryItem, use_cubari: boolean) {
+  if (!use_cubari) {
+    return new URL(`/g/${item.id}`, NHENTAI_ORIGIN).toString();
+  } else {
+    return new URL(`/read/nhentai/${item.id}/1/1/`, CUBARI_ORIGIN).toString();
+  }
 }
 
 export async function searchNhentai(

@@ -1,11 +1,19 @@
 import { SimpleSwitch } from "@/components/SimpleSwitch";
 import { Theme, useThemeStore } from "@/features/theming/";
-import { Button, Drawer } from "@mantine/core";
+import { useCoreStore } from "@/stores/core";
+import { Button, Drawer, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Settings } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 
 export function SettingsDrawer() {
+  const coreStore = useCoreStore(
+    useShallow((state) => ({
+      useCubariLinks: state.useCubariLinks,
+      setUseCubariLinks: state.setUseCubariLinks,
+    })),
+  );
+
   const [theme, setTheme] = useThemeStore(
     useShallow((state) => [state.activeTheme, state.setActiveTheme]),
   );
@@ -14,13 +22,22 @@ export function SettingsDrawer() {
   return (
     <>
       <Drawer opened={opened} onClose={close} title="Settings" position="right">
-        <SimpleSwitch
-          label="Dark Mode"
-          description="Enable dark mode"
-          checked={theme === Theme.Dark}
-          onChange={(event) => {
-            setTheme(event.currentTarget.checked ? Theme.Dark : Theme.Light);
-          }} />
+        <Stack gap="md">
+          <SimpleSwitch
+            label="Dark Mode"
+            description="Enable dark mode"
+            checked={theme === Theme.Dark}
+            onChange={(event) => {
+              setTheme(event.currentTarget.checked ? Theme.Dark : Theme.Light);
+            }} />
+          <SimpleSwitch
+            label="Use Cubari"
+            description="Use Cubari's nHentai proxy for the links"
+            checked={coreStore.useCubariLinks === true}
+            onChange={(event) => {
+              coreStore.setUseCubariLinks(event.currentTarget.checked);
+            }} />
+        </Stack>
       </Drawer>
 
       <Button

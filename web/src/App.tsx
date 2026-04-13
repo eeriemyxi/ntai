@@ -15,9 +15,11 @@ import { notify } from "./components/Notifications";
 import { LogsModal } from "./features/logs/";
 import { SettingsDrawer } from "./features/settings/";
 import { useThemeStore } from "./features/theming";
+import { useCoreStore } from "./stores/core";
 
 function App() {
   const theme = useThemeStore((state) => state.activeTheme);
+  const useCubariLinks = useCoreStore((state) => state.useCubariLinks);
   const [activePreset, activePresetIndex] = usePresetStore(useShallow((state) => {
     const index = state.activePreset;
     return [state.presets[index], index];
@@ -65,7 +67,7 @@ function App() {
 
                       if (result) {
                         logStore.logItem(activePresetIndex, result);
-                        window.open(bookUrl(result), "_blank");
+                        window.open(bookUrl(result, useCubariLinks), "_blank");
                       }
                     }}>
                     Search

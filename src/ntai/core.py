@@ -34,7 +34,6 @@ def nhentai_search(
         final = None
     return final
 
-
 def find_random_book(
     session: Session[Response],
     query: str,

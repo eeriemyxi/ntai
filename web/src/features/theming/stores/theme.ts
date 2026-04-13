@@ -22,6 +22,6 @@ export const useThemeStore = create<ThemeState>()(
         },
       })),
     ),
-    { name: "core" },
+    { name: "themes" },
   ),
 );

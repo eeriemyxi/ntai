@@ -18,10 +18,13 @@ import { useShallow } from "zustand/react/shallow";
 import { TooltipButton } from "@/components/TooltipComponents";
 import { usePresetStore } from "@/features/tags/";
 import { bookUrl, thumbnailUrl } from "@/fetching";
+import { useCoreStore } from "@/stores/core";
 import { useLogsStore } from "../";
 import classes from "./Styles.module.css";
 
 function LogsModalContent() {
+  const useCubariLinks = useCoreStore((state) => state.useCubariLinks);
+
   const logStore = useLogsStore(
     useShallow((state) => ({
       items: state.items,
@@ -55,7 +58,7 @@ function LogsModalContent() {
                   key={idx}
                   withBorder
                   component="a"
-                  href={bookUrl(model)}
+                  href={bookUrl(model, useCubariLinks)}
                   target="_blank"
                   className={classes.nativeMantineFeel}
                   p="md">
